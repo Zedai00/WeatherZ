@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WeatherZ</title>
+  <script defer src="main.js"></script></head>
+  <body>
+    <h1>WeatherZ</h1>
+
+    <div class="unit-tabs">
+      <button id="tabC" class="tab active">°C</button>
+      <button id="tabF" class="tab">°F</button>
+    </div>
+
+    <form id="weatherForm">
+      <input
+        type="text"
+        id="locationInput"
+        placeholder="Enter location"
+        required
+      />
+      <button type="submit">Get Weather</button>
+    </form>
+
+    <div id="loadingSpinner"></div>
+
+    <div id="weatherDisplay"></div>
+  </body>
+</html>
