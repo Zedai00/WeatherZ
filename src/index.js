@@ -1,5 +1,8 @@
 import "./styles.css"
 
+let currentUnit = 'C';
+let lastRawData = null;
+
 const tabC = document.getElementById('tabC');
 const tabF = document.getElementById('tabF');
 const weatherForm = document.getElementById('weatherForm');
@@ -29,28 +32,6 @@ weatherForm.addEventListener('submit', async (e) => {
   }
   showLoading(false);
 });
-
-async function displayWeather(data, unit) {
-  const unitSymbol = unit === 'F' ? '°F' : '°C';
-
-  try {
-    const iconResponse = await fetch(`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/1st%20Set%20-%20Color/${data.icon}.png`);
-    const iconBlob = await iconResponse.blob();
-    const iconUrl = URL.createObjectURL(iconBlob);
-
-    weatherDisplay.innerHTML = `
-  <h2>Weather in ${data.address}</h2>
-  <img src="${iconUrl}" alt="${data.condition}" width="100" height="100" />
-  <p><strong>Description:</strong> ${data.desc}</p>
-  <p><strong>Condition:</strong> ${data.condition}</p>
-  <p><strong>Temperature:</strong> ${data.temp}${unitSymbol}</p>
-  <p><strong>Feels Like:</strong> ${data.feels}${unitSymbol}</p>
-  <p><strong>Humidity:</strong> ${data.humid}%</p>
-  `;
-  } catch {
-    weatherDisplay.innerHTML = `<p>Failed to load weather icon.</p>`;
-  }
-}
 
 function switchUnit(unit) {
   if (unit === currentUnit) return;
@@ -95,6 +76,28 @@ function processWeatherData(weatherData, unit) {
     icon: curr.icon,
     temp
   };
+}
+
+async function displayWeather(data, unit) {
+  const unitSymbol = unit === 'F' ? '°F' : '°C';
+
+  try {
+    const iconResponse = await fetch(`https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/1st%20Set%20-%20Color/${data.icon}.png`);
+    const iconBlob = await iconResponse.blob();
+    const iconUrl = URL.createObjectURL(iconBlob);
+
+    weatherDisplay.innerHTML = `
+  <h2>Weather in ${data.address}</h2>
+  <img src="${iconUrl}" alt="${data.condition}" width="100" height="100" />
+  <p><strong>Description:</strong> ${data.desc}</p>
+  <p><strong>Condition:</strong> ${data.condition}</p>
+  <p><strong>Temperature:</strong> ${data.temp}${unitSymbol}</p>
+  <p><strong>Feels Like:</strong> ${data.feels}${unitSymbol}</p>
+  <p><strong>Humidity:</strong> ${data.humid}%</p>
+  `;
+  } catch {
+    weatherDisplay.innerHTML = `<p>Failed to load weather icon.</p>`;
+  }
 }
 
 function showLoading(isLoading) {
