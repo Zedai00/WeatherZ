@@ -1,8 +1,34 @@
 import "./styles.css"
 
+const tabC = document.getElementById('tabC');
+const tabF = document.getElementById('tabF');
 const weatherForm = document.getElementById('weatherForm');
 const locationInput = document.getElementById('locationInput');
 const weatherDisplay = document.getElementById('weatherDisplay');
+
+tabC.addEventListener('click', () => switchUnit('C'));
+tabF.addEventListener('click', () => switchUnit('F'));
+
+weatherForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const location = locationInput.value.trim();
+  if (!location) return;
+
+  showLoading(true);
+  try {
+    lastRawData = await getWeatherInfo(location);
+    if (!lastRawData || lastRawData.error) {
+      weatherDisplay.innerHTML = `<p style="color:red;">Could not fetch weather data. Please try another location.</p>`;
+      showLoading(false);
+      return;
+    }
+    const processed = processWeatherData(lastRawData, currentUnit);
+    await displayWeather(processed, currentUnit);
+  } catch (err) {
+    weatherDisplay.innerHTML = `<p style="color:red;">Error fetching data.</p>`;
+  }
+  showLoading(false);
+});
 
 async function displayWeather(data, unit) {
   const unitSymbol = unit === 'F' ? '°F' : '°C';
@@ -26,6 +52,19 @@ async function displayWeather(data, unit) {
   }
 }
 
+function switchUnit(unit) {
+  if (unit === currentUnit) return;
+
+  currentUnit = unit;
+
+  tabC.classList.toggle('active', currentUnit === 'C');
+  tabF.classList.toggle('active', currentUnit === 'F');
+
+  if (lastRawData) {
+    const processed = processWeatherData(lastRawData, currentUnit);
+    displayWeather(processed, currentUnit);
+  }
+}
 
 async function getWeatherInfo(location) {
   const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(location)}?key=C6FBP5Z6JJBC692EUYSKV6CFL`;
