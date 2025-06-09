@@ -3,6 +3,7 @@ import "./styles.css"
 const weatherForm = document.getElementById('weatherForm');
 const locationInput = document.getElementById('locationInput');
 const weatherDisplay = document.getElementById('weatherDisplay');
+
 async function displayWeather(data, unit) {
   const unitSymbol = unit === 'F' ? '°F' : '°C';
 
@@ -56,3 +57,13 @@ function processWeatherData(weatherData, unit) {
     temp
   };
 }
+
+function showLoading(isLoading) {
+  const spinner = document.getElementById('loadingSpinner');
+  if (isLoading) {
+    spinner.classList.add('visible');
+  } else {
+    spinner.classList.remove('visible');
+  }
+}
+
